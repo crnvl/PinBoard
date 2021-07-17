@@ -1,0 +1,17 @@
+{
+  "name": "hentailib",
+  "version": "1.0.0",
+  "description": "Create private Pinboards for all your Hentai needs!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "angelsflyinhell",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
