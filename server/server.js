@@ -1,25 +1,27 @@
 const express = require('express')
+var bodyParser = require('body-parser')
 const cors = require('cors');
 const app = express()
 
-var whitelist = ['http://localhost:3001', 'http://localhost:3000']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
 
-app.use(cors(corsOptions));
+app.use(cors({credentials : true}))
+
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({
+    extended: false
+}))
+
+app.use(function (req, res, next) {
+    res.setHeader('Content-Type', 'application/json')
+    next();
+  });
 
 const bcrypt = require('bcrypt')
 
-app.use(express.json())
-
-const users = []
+const users = [{
+    "name": "name",
+    "password": "$2b$10$vUbwVmmjf8AszqLmOAo49eDMZXtPelvqTJcq1cWAnyTPvvUNPuqBK"
+}]
 
 app.get('/users', (req, res) => {
     res.json(users)
@@ -41,18 +43,20 @@ app.post('/users', async (req, res) => {
 })
 
 app.post('/users/login', async (req, res) => {
+
+    console.log(req.body)
     const user = users.find(user => user.name == req.body.name)
-    if(user == null) {
+    if (user == null) {
         return res.status(400).send('Cannot find user')
     }
 
     try {
-        if(await bcrypt.compare(req.body.password, user.password)) {
-            res.send('Success')
-        }else {
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            res.sendStatus(200)
+        } else {
             res.send('Wrong Password')
         }
-    }catch {
+    } catch {
         res.status(500).send()
     }
 })

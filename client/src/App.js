@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 import LoginForm from './components/LoginForm';
+
+const axios = require('axios');
 
 function App() {
 
@@ -11,21 +12,14 @@ function App() {
   });
   const [error, setError] = useState("");
 
-  const login = details => {
-    console.log(details);
+  const login = async details => {
 
-
-    axios.post('http://localhost:8080/users/login', {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: details
-    }).then(res => {
-      console.log(`statusCode: ${res.statusCode}`)
-      console.log(res)
-    }).catch(error => {
-      console.error(error)
-    })
+    const postLogin = () => {
+      axios.post('http://localhost:8080/users/login', details)
+      .then((res) => {
+        console.log(res)
+      })
+    }
 
   }
 
@@ -35,7 +29,7 @@ function App() {
 
   return (
     <div className = "App" >
-        {(user.email != "") ? (
+        {(user.email !== "") ? (
           <div className="welcome">
             <h2>Welcome <span>{user.name}</span></h2>
             <button>Logout</button>
